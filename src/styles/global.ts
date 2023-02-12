@@ -37,5 +37,12 @@ export default createGlobalStyle(
     p {
       font-size: 1.5rem;
     }
+    a {
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
   `
 );
