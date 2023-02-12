@@ -9,6 +9,8 @@ import Document, {
 import React from "react";
 import { ServerStyleSheet } from "styled-components";
 
+// This entire file has the styled-component work with SSR and stylesheet rehydration
+
 export default class MyDocument extends Document {
   static async getInitialProps(
     ctx: DocumentContext
