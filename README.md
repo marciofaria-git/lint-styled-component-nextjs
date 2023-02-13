@@ -1,5 +1,3 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
 First, run the development server:
@@ -14,25 +12,157 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## How To Pass By Pass
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+</br>
+Install the Dependecies
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```
+yarn add -D babel-plugin-styled-components postcss-styled-syntax stylelint stylelint-config-standard-scss stylelint-config-styled-components stylelint-custom-processor-loader
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+</br>
+create a file called '.babelrc' or add to an existing file.
 
-## Learn More
+```
+{
+    "plugins": [
+      [
+        "babel-plugin-styled-components",
 
-To learn more about Next.js, take a look at the following resources:
+        {
+          "ssr": true,
+          "transpileTemplateLiterals":true,
+          "minify":true,
+          "pure":true
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+        }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+      ]
+    ],
+    "presets": [
+      "next/babel",
+      "@babel/preset-typescript"
 
-## Deploy on Vercel
+    ]
+  }
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+</br>
+Create a file named by '.stylelintrc' and paste de code belown.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+{
+  "processors": [
+    "stylelint-processor-styled-components"
+  ],
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-styled-components"
+  ],
+  "customSyntax": "postcss-styled-syntax",
+  "rules": {
+    "selector-type-case": [
+      "lower",
+      {
+        "ignoreTypes": [
+          "/^\\$\\w+/"
+        ]
+      }
+    ],
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignoreTypes": [
+          "/-styled-mixin/",
+          "/^\\$\\w+/"
+        ]
+      }
+    ],
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreKeywords": [
+          "dummyValue"
+        ]
+      }
+    ],
+    "declaration-colon-newline-after": null
+  }
+}
+```
+
+</br>
+
+On your package.json add in script the following code `"lint:css": "stylelint './src/**/*.ts'"` for TypeScript or `"lint:css": "stylelint './src/**/*.js'"` for JavaScript
+</br>
+
+```
+"scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:css": "stylelint './src/**/*.ts'"
+  }
+
+```
+
+Then run yarn lint:css
+
+The output should be like this
+
+<h1 align="center">
+    <img alt="output" src="https://i.ibb.co/ZBzD0wz/Screenshot-from-2023-02-12-22-55-38.png" />
+</h1>
+
+The rules is working and you can add more rules following the stylelint docs
+
+- [Stylelint Rules](https://stylelint.io/user-guide/rules)
+
+## !Hints
+
+If you are using themed style components or having some problems with the rules that are not applying rules in some style code.
+
+```
+If you are using like this.
+
+export const Modal = styled.div`
+background: ${props => props.theme.color.aqua};
+z-index:${props => props.theme.layers.base};
+`
+or
+
+export const Modal = styled.div`
+ ${({ theme }) => css`
+    background: ${theme.color.aqua};
+    z-index:${theme.layers.base};
+  `}
+
+try using this
+
+export const Modal = styled.div(
+  ({ theme }) => css`
+    color: ${theme.color.aqua_teen};
+    z-index: ${theme.layers.base};
+
+    ${theme.breakpoints.mobile} {
+      z-index: ${theme.layers.menu};
+    }
+  `,
+)
+
+Your code get more clean, legible and more usefully, and resolve some problems with template literals.
+```
+
+<h1 align="center">
+    <img alt="other way to use in styled-components" src="https://i.ibb.co/yf7VS83/try-this.png" />
+</h1>
+
+- [Styled Components Helpers](https://styled-components.com/docs/api#css)
+
+## Conclusion
+
+Stylelint is very useful for making your CSS styles cleaner and less bug-prone during your project development.
+
+Hope I helped, if you have any suggestions please leave a comment.
