@@ -12,7 +12,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## How To Pass By Pass
+## How to do it step by step
 
 </br>
 Install the Dependecies
